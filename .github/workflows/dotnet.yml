@@ -31,6 +31,14 @@ jobs:
       - name: Pack Middleware
         run: dotnet pack ./AutorizacionMiddleware/Autorizacion.Middleware/Autorizacion.Middleware.csproj --configuration Release --no-build
 
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Autorizacion
+          path: ./AutorizacionMiddleware/Autorizacion.Middleware/bin/Release/*.nupkg
+          if-no-files-found: error
+          retention-days: 7
+          
       - name: Add GitHub NuGet Source
         run: |
           dotnet nuget add source \
