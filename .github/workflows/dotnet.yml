@@ -1,0 +1,56 @@
+name: Publish Middleware
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+
+  publish:
+
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+
+      - name: Restore
+        run: dotnet restore ./AutorizacionMiddleware/AutorizacionMiddleware.sln
+
+      - name: Build
+        run: dotnet build ./AutorizacionMiddleware/AutorizacionMiddleware.sln --configuration Release --no-restore
+
+      - name: Pack Middleware
+        run: >
+          dotnet pack
+          ./AutorizacionMiddleware/Autorizacion.Middleware/Autorizacion.Middleware.csproj
+          --configuration Release
+          --no-build
+
+      - name: Add GitHub NuGet Source
+        run: >
+          dotnet nuget add source
+          --username vjulio
+          --password ${{ secrets.AUTORIZACION_TOKEN }}
+          --store-password-in-clear-text
+          --name github
+          https://nuget.pkg.github.com/vjulio/index.json
+
+      - name: Publish Package
+        run: >
+          dotnet nuget push
+          "./AutorizacionMiddleware/Autorizacion.Middleware/bin/Release/*.nupkg"
+          --api-key ${{ secrets.AUTORIZACION_TOKEN }}
+          --source github
+          --skip-duplicate
