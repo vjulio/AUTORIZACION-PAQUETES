@@ -6,7 +6,7 @@ on:
       - main
 
 permissions:
-  contents: read
+  contents: write
   packages: write
 
 jobs:
@@ -46,3 +46,20 @@ jobs:
             --api-key "${{ secrets.AUTORIZACION_TOKEN }}" \
             --source github \
             --skip-duplicate
+
+      - name: Publish Package
+        run: |
+          dotnet nuget push "./AutorizacionMiddleware/Autorizacion.Middleware/bin/Release/*.nupkg" \
+            --api-key "${{ secrets.AUTORIZACION_TOKEN }}" \
+            --source github \
+            --skip-duplicate
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v1.0.${{ github.run_number }}
+          name: Release v1.0.${{ github.run_number }}
+          generate_release_notes: true
+          files: |
+            ./AutorizacionMiddleware/Autorizacion.Middleware/bin/Release/*.nupkg
+            
