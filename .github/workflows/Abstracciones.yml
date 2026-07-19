@@ -35,7 +35,7 @@ jobs:
         name: Autorizacion.Abstracciones
         if-no-files-found: error
         retention-days: 7
-        path: /home/runner/work/SC-701-Paquetes/SC-701-Paquetes/AutorizacionMiddleware/Autorizacion.Abstracciones/bin/Release/*.nupkg
+        path: /home/runner/work/AUTORIZACION-PAQUETES/AutorizacionMiddleware/Autorizacion.Abstracciones/bin/Release/*.nupkg
 
   release:
     runs-on: ubuntu-latest    
@@ -51,7 +51,7 @@ jobs:
       run: ls -R
       
     - name: Prep packages
-      run: dotnet nuget add source --username Drojascode --password ${{ secrets.PAQUETES_TOKEN }} --store-password-in-clear-text --name paquetes "https://nuget.pkg.github.com/Drojascode/index.json"
+      run: dotnet nuget add source --username vjulio --password ${{ secrets.PAQUETES_TOKEN }} --store-password-in-clear-text --name paquetes "https://nuget.pkg.github.com/vjulio/index.json"
     - name: Push package to GitHub packages 
       run: dotnet nuget push Autorizacion.Abstracciones/*.nupkg --api-key ${{ secrets.PAQUETES_TOKEN }}  --source "paquetes" --skip-duplicate
     
