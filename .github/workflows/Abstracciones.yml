@@ -1,4 +1,4 @@
-name: Publicar Autorizacion.Middleware
+name: Publicar Autorizacion.Abstracciones
 
 on:
   push:
@@ -14,8 +14,8 @@ permissions:
   packages: write
 
 env:
-  PROJECT_PATH: ./AutorizacionMiddleware/Autorizacion.Middleware/Autorizacion.Middleware.csproj
-  PACKAGE_DIR: ./paquetes/Autorizacion.Middleware
+  PROJECT_PATH: ./AutorizacionMiddleware/Autorizacion.Abstracciones/Autorizacion.Abstracciones.csproj
+  PACKAGE_DIR: ./paquetes/Autorizacion.Abstracciones
 
 jobs:
 
@@ -24,12 +24,12 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Setup .NET
-        uses: actions/setup-dotnet@v4
+        uses: actions/setup-dotnet@v5
         with:
-          dotnet-version: 8.0.x
+          dotnet-version: "8.0.x"
 
       - name: Restore dependencies
         run: dotnet restore "$PROJECT_PATH"
@@ -56,8 +56,8 @@ jobs:
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: Autorizacion.Middleware
-          path: ./paquetes/Autorizacion.Middleware/*.nupkg
+          name: Autorizacion.Abstracciones
+          path: ./paquetes/Autorizacion.Abstracciones/*.nupkg
           if-no-files-found: error
           retention-days: 7
 
@@ -65,20 +65,20 @@ jobs:
     runs-on: ubuntu-latest
     needs: build
 
-    # No publicar paquetes cuando el workflow se ejecute por un Pull Request.
+    # No publicar paquetes durante un Pull Request.
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
 
     steps:
       - name: Setup .NET
-        uses: actions/setup-dotnet@v4
+        uses: actions/setup-dotnet@v5
         with:
-          dotnet-version: 8.0.x
+          dotnet-version: "8.0.x"
 
       - name: Download Artifact
         uses: actions/download-artifact@v4
         with:
-          name: Autorizacion.Middleware
-          path: ./paquetes/Autorizacion.Middleware
+          name: Autorizacion.Abstracciones
+          path: ./paquetes/Autorizacion.Abstracciones
 
       - name: List downloaded files
         run: ls -R ./paquetes
@@ -95,7 +95,7 @@ jobs:
       - name: Push package to GitHub Packages
         run: |
           dotnet nuget push \
-            ./paquetes/Autorizacion.Middleware/*.nupkg \
+            ./paquetes/Autorizacion.Abstracciones/*.nupkg \
             --api-key "${{ secrets.AUTORIZACION_TOKEN }}" \
             --source "paquetes" \
             --skip-duplicate
