@@ -35,12 +35,18 @@ jobs:
         run: dotnet pack ./AutorizacionMiddleware/Autorizacion.Middleware/Autorizacion.Middleware.csproj --configuration Release --no-build
 
       - name: Upload Artifact
+        id: upload_artifact
         uses: actions/upload-artifact@v4
         with:
           name: Autorizacion
           path: ./AutorizacionMiddleware/Autorizacion.Middleware/bin/Release/*.nupkg
           if-no-files-found: error
           retention-days: 7
+
+      - name: Show Artifact Link
+        run: |
+          echo "## Paquete generado" >> "$GITHUB_STEP_SUMMARY"
+          echo "[Descargar artifact Autorizacion](${{ steps.upload_artifact.outputs.artifact-url }})" >> "$GITHUB_STEP_SUMMARY"
 
   release:
 
