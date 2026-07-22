@@ -1,7 +1,8 @@
-﻿using Autorizacion.Abstracciones.DA;
+﻿
 using System.Data;
 using Npgsql;
 using Microsoft.Extensions.Configuration;
+using Abstracciones.DA;
 
 namespace Autorizacion.DA.Repositorios
 {
