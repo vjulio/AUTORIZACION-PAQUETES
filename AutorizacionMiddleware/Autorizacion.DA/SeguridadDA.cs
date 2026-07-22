@@ -1,4 +1,5 @@
-﻿using Autorizacion.Abstracciones.DA;
+﻿using Abstracciones.DA;
+using Autorizacion.Abstracciones.DA;
 using Autorizacion.Abstracciones.Modelos;
 using Autorizacion.DA.Repositorios;
 using Dapper;
@@ -17,6 +18,11 @@ namespace Autorizacion.DA
         {
             this.repositorioDapper = repositorioDapper;
             _connection = repositorioDapper.ObtenerRepositorioDapper();
+        }
+
+        public Task<int> CrearUsuario(Usuario usuario, int? usuarioCrea)
+        {
+            throw new NotImplementedException();
         }
 
         //public async Task<IEnumerable<Perfil>> ObtenerPerfilesxUsuario(Usuario usuario)
