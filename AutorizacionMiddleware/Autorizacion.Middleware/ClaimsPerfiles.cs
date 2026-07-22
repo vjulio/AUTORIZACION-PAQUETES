@@ -3,6 +3,7 @@ using Autorizacion.Abstracciones.Modelos;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
+using System.Numerics;
 using System.Security.Claims;
 
 namespace Autorizacion.Middleware
@@ -83,6 +84,9 @@ namespace Autorizacion.Middleware
     {
         public static IApplicationBuilder AutorizacionClaims(this IApplicationBuilder builder) 
         {
+            int a;
+            a = 1;
+
             return builder.UseMiddleware<ClaimsPerfiles>();
         }
 
