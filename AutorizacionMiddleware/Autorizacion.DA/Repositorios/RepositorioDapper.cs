@@ -5,7 +5,7 @@ using Microsoft.Extensions.Configuration;
 using Autorizacion.Abstracciones.DA;
 
 
-namespace Autorizacion.DA
+namespace Autorizacion.DA.Repositorios
 {
     public class RepositorioDapper : IRepositorioDapper
     {
