@@ -1,7 +1,6 @@
-﻿using Abstracciones.DA;
-using Autorizacion.Abstracciones.DA;
+﻿using Autorizacion.Abstracciones.DA;
 using Autorizacion.Abstracciones.Modelos;
-using Autorizacion.DA.Repositorios;
+
 using Dapper;
 using Helpers;
 using System.Data;
