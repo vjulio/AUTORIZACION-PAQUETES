@@ -1,0 +1,101 @@
+name: Publicar Autorizacion.DA
+
+on:
+  push:
+    branches:
+      - main
+
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: read
+  packages: write
+
+env:
+  PROJECT_PATH: ./AutorizacionMiddleware/Autorizacion.DA/Autorizacion.DA.csproj
+  PACKAGE_DIR: ./paquetes/Autorizacion.DA
+
+jobs:
+
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: "8.0.x"
+
+      - name: Restore dependencies
+        run: dotnet restore "$PROJECT_PATH"
+
+      - name: Build
+        run: >
+          dotnet build
+          "$PROJECT_PATH"
+          --configuration Release
+          --no-restore
+          -p:GeneratePackageOnBuild=false
+
+      - name: Pack
+        run: >
+          dotnet pack
+          "$PROJECT_PATH"
+          --configuration Release
+          --no-build
+          --output "$PACKAGE_DIR"
+
+      - name: List generated packages
+        run: ls -R "$PACKAGE_DIR"
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Autorizacion.DA
+          path: ./paquetes/Autorizacion.DA/*.nupkg
+          if-no-files-found: error
+          retention-days: 7
+
+  release:
+    runs-on: ubuntu-latest
+    needs: build
+
+    # Publicar únicamente cuando se haga push a main.
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+
+    steps:
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: "8.0.x"
+
+      - name: Download Artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: Autorizacion.DA
+          path: ./paquetes/Autorizacion.DA
+
+      - name: List downloaded files
+        run: ls -R ./paquetes
+
+      - name: Add GitHub NuGet Source
+        run: |
+          dotnet nuget add source \
+            --username vjulio \
+            --password "${{ secrets.AUTORIZACION_TOKEN }}" \
+            --store-password-in-clear-text \
+            --name paquetes \
+            "https://nuget.pkg.github.com/vjulio/index.json"
+
+      - name: Push package to GitHub Packages
+        run: |
+          dotnet nuget push \
+            ./paquetes/Autorizacion.DA/*.nupkg \
+            --api-key "${{ secrets.AUTORIZACION_TOKEN }}" \
+            --source "paquetes" \
+            --skip-duplicate
