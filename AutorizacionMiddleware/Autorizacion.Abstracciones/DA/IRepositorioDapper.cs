@@ -2,7 +2,7 @@
 using System.Data;
 
 
-namespace Abstracciones.DA
+namespace Autorizacion.Abstracciones.DA
 {
     public interface IRepositorioDapper
     {

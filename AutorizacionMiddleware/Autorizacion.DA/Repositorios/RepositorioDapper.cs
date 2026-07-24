@@ -2,14 +2,15 @@
 using System.Data;
 using Npgsql;
 using Microsoft.Extensions.Configuration;
-using Abstracciones.DA;
+using Autorizacion.Abstracciones.DA;
 
-namespace Autorizacion.DA.Repositorios
+
+namespace Autorizacion.DA
 {
     public class RepositorioDapper : IRepositorioDapper
     {
         private readonly IConfiguration _configuration;
-        private IDbConnection _connection;
+        
 
         public RepositorioDapper(IConfiguration configuration)
         {
